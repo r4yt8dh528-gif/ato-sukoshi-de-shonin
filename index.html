@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>あと少しで承認</title>
+
+  <!-- 検索結果やSNSでリンクを貼ったときに表示される説明 -->
+  <meta name="description" content="ボールペン1本の購入の稟議が、いつまで経っても承認されない。上司に催促し続けるだけの、くだらないブラウザゲーム。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="あと少しで承認">
+  <meta property="og:description" content="ボールペン1本の購入の稟議が、いつまで経っても承認されない。上司に催促し続けるだけの、くだらないブラウザゲーム。">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="あと少しで承認">
+  <meta name="twitter:description" content="ボールペン1本の購入の稟議が、いつまで経っても承認されない。上司に催促し続けるだけの、くだらないブラウザゲーム。">
+
+  <!-- ブラウザのタブに出るアイコン(赤い「承」のハンコ。画像ファイルを使わずに描いている) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='white' stroke='%23dc2626' stroke-width='5'/%3E%3Ctext x='32' y='43' font-size='32' font-weight='bold' text-anchor='middle' fill='%23dc2626'%3E%E6%89%BF%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game">
+    <div class="doc-header">
+      <span>稟議書 No.2026-000001</span>
+      <span>申請者: あなた</span>
+    </div>
+
+    <h1>あと少しで承認</h1>
+    <p class="subject">件名: ボールペン1本の購入について</p>
+    <p class="subtitle">承認されるまで、上司に催促し続けてください。それだけです。</p>
+
+    <div class="gauge">
+      <div class="gauge-fill" id="gaugeFill"></div>
+    </div>
+    <p class="percent" id="percent">0%</p>
+    <p class="approver">現在の承認者: <b id="approver">係長</b></p>
+
+    <p class="message" id="message">稟議書を提出しました。さあ、催促しましょう。</p>
+
+    <button class="push-button" id="pushButton">催促する</button>
+
+    <p class="counter">催促した回数: <span id="clickCount">0</span> 回</p>
+  </main>
+
+  <!-- しつこい確認ダイアログ -->
+  <div class="dialog hidden" id="dialog">
+    <div class="dialog-box">
+      <p id="dialogText"></p>
+      <div class="dialog-buttons" id="dialogButtons"></div>
+    </div>
+  </div>
+
+  <!-- エンディング(意地になって催促し続けた人だけが見られる) -->
+  <div class="ending hidden" id="ending">
+    <div class="confetti" id="confetti"></div>
+    <div class="ending-content">
+      <p class="ending-percent">100%</p>
+      <div class="stamp-wrap"><span class="stamp">承認</span></div>
+
+      <p class="line" style="--d:1.5s">え……？</p>
+      <p class="line big" style="--d:2.5s">承認されました！！！！！</p>
+
+      <p class="line para" style="--d:4s">
+        おめでとうございます。あなたが提出した「ボールペン1本の購入について」の稟議書が、ついに、ついに、ついに最終承認されました。提出から今日この瞬間まで、社内の誰もが「あの稟議は永遠に終わらない」と噂し、いつしか社内七不思議の八つ目として語り継がれ始めていました。その伝説に、あなたは自らの手で終止符を打ったのです。
+      </p>
+      <p class="line para" style="--d:7s">
+        係長、課長、次長、部長、本部長、常務、専務、副社長、社長、会長、そして創業者の銅像に至るまで、全員がハンコを押しました。これは当社の創業以来、初めての快挙です。銅像がハンコを押す瞬間を目撃した警備員によると、銅像はかすかに微笑んでいたそうです。
+      </p>
+      <p class="line para" style="--d:10s">
+        何度差し戻されても、何度ボタンに逃げられても、何度書類にコーヒーをこぼされても、何度「前向きに検討します」と言われても、あなたは決して諦めませんでした。その姿に経理部は涙し、総務部はスタンディングオベーションを送り、人事部は評価シートに収まりきらないほどの「S」を書き込み、情報システム部は感動のあまりサーバーを再起動しました。
+      </p>
+      <p class="line para" style="--d:13s">
+        あなたの粘り強さは、もはや一社員の枠に収まりません。業界紙は一面で「令和の催促王、現る」と報じ、経済番組は緊急特集を組み、ビジネス書の出版社三社が、すでに執筆依頼の準備を進めています。仮タイトルは『押せば通る ― ボールペン1本にすべてを賭けた者の記録』だそうです。
+      </p>
+      <p class="line para" style="--d:16s">
+        本日をもって、あなたの名前は社史の1ページ目に刻まれます。社内報の表紙は、来月から10年間あなたの写真で固定されることが、異例のスピードで承認されました。さらに本社ロビーには、創業者の銅像の隣にあなたの銅像を建てる計画が、すでに稟議にかけられています(承認時期は未定です)。
+      </p>
+      <p class="line para" style="--d:19s">
+        社員食堂には新メニュー「催促王定食」が登場し、毎年この日は「催促の日」として全社休業日になることが決まりました。新入社員研修では、あなたの催促の記録を教材にした特別講義が、未来永劫の必修科目となります。
+      </p>
+      <p class="line para" style="--d:22s">
+        世界中のビジネスパーソンが、今、あなたに敬意を表しています。各国の首脳から祝電が届き、遠く南極の観測隊からも「おめでとう」の無線が入りました。人類の歴史は、あなたが「催促する」ボタンを押し続けたこの日を境に、新たな章へと進むことでしょう。あなたこそ、真の承認を勝ち取った人です。
+      </p>
+      <p class="line big" style="--d:25s">本当に、本当に、本当に、お疲れさまでした。</p>
+
+      <div class="line ending-stats" style="--d:26.5s">
+        <div>催促した回数<b id="endClicks">-</b></div>
+        <div>かかった時間<b id="endTime">-</b></div>
+      </div>
+      <p class="line achievement" style="--d:28s">実績解除：伝説の催促王</p>
+      <p class="line small" id="punchline" style="--d:30s">なお、ボールペンは在庫切れのため購入できませんでした。</p>
+      <button class="line share-button" style="--d:31s" id="shareButton">結果を X でシェアする</button>
+      <button class="line retry-button" style="--d:32s" id="retryButton">もう一度稟議を出す</button>
+    </div>
+    <p class="skip-hint" id="skipHint">画面をタップすると全文を表示します</p>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

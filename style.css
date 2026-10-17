@@ -1,0 +1,408 @@
+/* 画面全体(オフィスっぽい明るい配色) */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: #e9ecf1;
+  color: #1f2937;
+  font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+  /* 横スクロールだけ防ぐ。縦は画面が低いとき(スマホ横向きなど)にスクロールできるようにする */
+  overflow-x: hidden;
+}
+
+/* 稟議書っぽい白い紙 */
+.game {
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #1e3a8a;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+h1 {
+  margin: 16px 0 4px;
+  color: #1e3a8a;
+}
+
+.subject {
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* ゲージ */
+.gauge {
+  height: 24px;
+  margin-top: 24px;
+  background: #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.gauge-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #3b82f6, #1e3a8a);
+  transition: width 0.3s ease;
+}
+
+/* ゲージが下がったときに赤く光らせる */
+.gauge-fill.setback {
+  background: linear-gradient(90deg, #f87171, #dc2626);
+}
+
+.percent {
+  font-size: 40px;
+  font-weight: bold;
+  margin: 12px 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.approver {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.approver b {
+  color: #1f2937;
+}
+
+.message {
+  min-height: 48px;
+  margin: 16px 0;
+  padding: 8px 12px;
+  background: #fef3c7;
+  border-left: 3px solid #d97706;
+  border-radius: 4px;
+  color: #92400e;
+  font-size: 14px;
+  text-align: left;
+}
+
+/* ボタン */
+.push-button {
+  padding: 16px 48px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  background: #1e3a8a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  touch-action: manipulation; /* スマホで連打してもズームしないようにする */
+  white-space: nowrap; /* 画面の端でも文字が折り返さないようにする(ボタンの大きさを正しく測るため) */
+}
+
+.push-button:active {
+  transform: scale(0.95);
+}
+
+/* ボタンが逃げ回るモード */
+.push-button.escaping {
+  position: fixed;
+  transition: left 0.2s, top 0.2s;
+}
+
+/* 偽物のボタンは本物の上に重なるようにする */
+.push-button.fake {
+  z-index: 2;
+}
+
+/* ボタンが透明になるモード */
+.push-button.ghost {
+  opacity: 0.04;
+}
+
+/* 画面が上下逆さまになるモード */
+.game.upside-down {
+  transform: rotate(180deg);
+  transition: transform 0.6s;
+}
+
+.counter {
+  margin: 20px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* 画面が揺れる演出 */
+.shake {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+/* ===== しつこい確認ダイアログ ===== */
+.hidden {
+  display: none !important;
+}
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.dialog-box {
+  width: 100%;
+  max-width: 320px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.dialog-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.dialog-buttons button {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background: #1e3a8a;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===== エンディング ===== */
+.ending {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #fde68a, #f9a8d4, #a5b4fc);
+  color: #1f2937;
+  z-index: 20;
+}
+
+.ending-content {
+  position: relative;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 40px 16px 64px;
+  text-align: center;
+  z-index: 1;
+}
+
+.ending-percent {
+  margin: 0;
+  font-size: clamp(80px, 28vw, 160px);
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 4px 0 #f59e0b, 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: pop 0.8s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.2); }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* 大きな「承認」のハンコ */
+.stamp-wrap {
+  margin: 8px 0 16px;
+}
+
+.stamp {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  border: 8px solid #dc2626;
+  border-radius: 50%;
+  color: #dc2626;
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 134px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  animation: stampIn 0.4s ease-out 0.8s forwards;
+}
+
+@keyframes stampIn {
+  0% { transform: scale(3) rotate(-12deg); opacity: 0; }
+  100% { transform: scale(1) rotate(-12deg); opacity: 1; }
+}
+
+/* 1行ずつ順番に表示する。表示タイミングは各要素の --d で指定 */
+.line {
+  font-size: clamp(16px, 4.5vw, 22px);
+  font-weight: bold;
+  opacity: 0;
+  animation: fadeIn 0.8s forwards;
+  animation-delay: var(--d);
+}
+
+.line.big {
+  font-size: clamp(24px, 7vw, 36px);
+  color: #db2777;
+}
+
+/* 長文の褒め言葉 */
+.line.para {
+  font-size: 15px;
+  font-weight: normal;
+  line-height: 1.9;
+  text-align: left;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ending-stats {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.ending-stats div {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.ending-stats b {
+  display: block;
+  font-size: 22px;
+}
+
+.achievement {
+  display: inline-block;
+  padding: 12px 20px;
+  background: #1e3a8a;
+  color: #fde68a;
+  border-radius: 999px;
+}
+
+.small {
+  margin-top: 32px;
+  font-size: 13px;
+  font-weight: normal;
+  color: #4b5563;
+}
+
+/* 「タップで全文表示」の案内(画面の下に固定) */
+.skip-hint {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #ffffff;
+  background: rgba(31, 41, 55, 0.7);
+  border-radius: 999px;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+/* タップで全文表示したあと: 待ち時間なしで全部見せる */
+.ending.show-all .line {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.ending.show-all .stamp {
+  animation: none;
+  opacity: 1;
+  transform: rotate(-12deg);
+}
+
+.ending.show-all .skip-hint {
+  display: none;
+}
+
+/* 結果をシェアするボタン(X の色に合わせて黒) */
+.share-button {
+  display: block;
+  margin: 32px auto 0;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background: #111827;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.retry-button {
+  display: block;
+  margin: 16px auto 0;
+  padding: 10px 20px;
+  font-size: 14px;
+  color: #1f2937;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* 紙吹雪 */
+.confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti span {
+  position: absolute;
+  top: -20px;
+  width: 10px;
+  height: 14px;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); }
+}
