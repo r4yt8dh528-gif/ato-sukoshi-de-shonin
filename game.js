@@ -67,6 +67,40 @@ const APPROVERS = [
   "創業者の銅像",
 ];
 
+// ---------------------------------------------
+// 「X でシェア」のポスト文
+// ---------------------------------------------
+
+// ポストの最後に付けるゲームのURL
+const GAME_URL = "https://r4yt8dh528-gif.github.io/ato-sukoshi-de-shonin/";
+
+// 定型文の上下をはさむ区切り線(「―」ダッシュ記号を10個)
+// 罫線の「─」は文字数を2倍使うので使わない
+const SHARE_DIVIDER = "――――――――――";
+
+// 定型文のパターン。シェアするたびに、この中からランダムに1つ選ぶ
+// 1つのパターンは「` `」(バッククォート)で囲み、改行はそのまま書けば反映される
+const SHARE_PATTERNS = [
+  `【承認通知】
+件名:ボールペン1本の購入について
+決裁結果:承認
+#あと少しで承認`,
+
+  `件名:ボールペン1本の購入について
+全承認者の決裁が完了しました。
+#あと少しで承認`,
+
+  `【決裁完了】
+件名:ボールペン1本の購入について
+最終承認者:創業者の銅像
+#あと少しで承認`,
+
+  `【速報】ボールペン1本の稟議、ついに承認されました。
+最終承認者:創業者の銅像
+なお、ボールペンは――
+#あと少しで承認`,
+];
+
 // =============================================
 // ゲームの状態
 // =============================================
@@ -707,17 +741,17 @@ retryButton.addEventListener("click", (e) => {
 shareButton.addEventListener("click", (e) => {
   if (!isShown(shareButton)) return;
   e.stopPropagation();
-  const time = formatTime(Date.now() - startTime);
-  const text =
-    `「ボールペン1本の購入」の稟議を通すため、上司に${clickCount}回催促しました(所要時間 ${time})。` +
-    "\n実績「伝説の催促王」を解除。\n#あと少しで承認";
-  let shareUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);
-  // 公開したページで遊んでいるときだけ、ゲームのURLも付ける
-  if (location.protocol.startsWith("http")) {
-    shareUrl += "&url=" + encodeURIComponent(location.origin + location.pathname);
-  }
-  window.open(shareUrl, "_blank", "noopener");
+  window.open(buildShareUrl(), "_blank", "noopener");
 });
+
+// ポスト文を組み立てて、X の投稿画面のURLにする
+// 形式: 空行2つ(本人が一言書くスペース) → 区切り線 → 定型文 → 区切り線 → ゲームのURL
+function buildShareUrl() {
+  const pattern = pick(SHARE_PATTERNS);
+  const lines = ["", "", SHARE_DIVIDER, pattern, SHARE_DIVIDER, GAME_URL];
+  const text = lines.join("\n");
+  return "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);
+}
 
 // 文章が1行出てくるたびに、その行が画面の真ん中に来るよう自動でスクロールする
 ending.addEventListener("animationstart", (e) => {
