@@ -7,9 +7,10 @@ body {
   margin: 0;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  /* 紙は画面の上に固定する。中央寄せだと、紙の高さが少し変わるだけで紙全体が上下に動いてしまうため */
+  align-items: flex-start;
   justify-content: center;
-  padding: 16px;
+  padding: 24px 16px;
   background: #e9ecf1;
   color: #1f2937;
   font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
@@ -93,7 +94,8 @@ h1 {
 }
 
 .message {
-  min-height: 48px;
+  /* 常に2行ぶんの高さを確保して、メッセージが1行⇔2行で変わっても下の部分が動かないようにする */
+  min-height: calc(1.6em * 2 + 16px);
   margin: 16px 0;
   padding: 8px 12px;
   background: #fef3c7;
@@ -101,7 +103,23 @@ h1 {
   border-radius: 4px;
   color: #92400e;
   font-size: 14px;
+  line-height: 1.6;
   text-align: left;
+}
+
+/* 幅の狭いスマホでは長いメッセージが3行になるので、3行ぶん確保する */
+@media (max-width: 359px) {
+  .message {
+    min-height: calc(1.6em * 3 + 16px);
+  }
+}
+
+/* ボタンの置き場所。ボタンが逃げたり縮んだりしても高さを保つ */
+.button-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
 }
 
 /* ボタン */

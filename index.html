@@ -38,7 +38,10 @@
 
     <p class="message" id="message">稟議書を提出しました。さあ、催促しましょう。</p>
 
-    <button class="push-button" id="pushButton">催促する</button>
+    <!-- ボタンの置き場所。ボタンが逃げたり縮んだりしても、この場所の大きさは変わらない -->
+    <div class="button-slot">
+      <button class="push-button" id="pushButton">催促する</button>
+    </div>
 
     <p class="counter">催促した回数: <span id="clickCount">0</span> 回</p>
   </main>
