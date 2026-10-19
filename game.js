@@ -21,8 +21,8 @@ const dialogButtons = document.getElementById("dialogButtons");
 // 承認に必要な「押した回数」の範囲。新しい稟議を出すたびに、この範囲からランダムに決まる
 // 決まった回数ちょうどで必ず承認される(途中で再読み込みしても回数は変わらない)
 // 動作を試すときは、両方を 200 にすると短く遊べる
-const CLEAR_CLICKS_MIN = 200;
-const CLEAR_CLICKS_MAX = 200;
+const CLEAR_CLICKS_MIN = 700;
+const CLEAR_CLICKS_MAX = 1200;
 
 // 意地悪の発生確率(押した回数の進み具合ごとの段階)
 // until: 押した回数が承認に必要な回数の何%未満までか / chance: 1回押すごとに意地悪が起きる確率
