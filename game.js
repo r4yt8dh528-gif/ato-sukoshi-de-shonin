@@ -130,6 +130,16 @@ function pick(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+// 並び順をシャッフルした新しい配列を返す(どの並び順も同じ確率になる「フィッシャー・イェーツ」という方法)
+function shuffle(list) {
+  const result = [...list];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 // ---------------------------------------------
 // 進み具合の計算
 // ---------------------------------------------
@@ -340,10 +350,10 @@ function placeOnGrid(buttons) {
       cells.push({ col, row });
     }
   }
-  cells.sort(() => Math.random() - 0.5);
+  const shuffledCells = shuffle(cells);
 
   buttons.forEach((button, i) => {
-    const cell = cells[i];
+    const cell = shuffledCells[i];
     // マス目が足りない場合、本物以外は消す
     if (!cell) {
       button.remove();
@@ -379,6 +389,7 @@ function resetLook() {
   pushButton.style.top = "";
   pushButton.style.fontSize = "";
   pushButton.style.padding = "";
+  pushButton.removeAttribute("tabindex");
   game.classList.remove("upside-down");
   document.querySelectorAll(".fake").forEach((b) => b.remove());
 }
@@ -440,6 +451,11 @@ const events = [
     run: () => {
       mode = { type: "fakes" };
       say("似たような稟議書が大量に回ってきました。あなたの書類はひとつだけです。");
+      // 本物のボタンだけ文字が選択状態のまま残って、正解がばれないようにする
+      window.getSelection().removeAllRanges();
+      // 本物のボタンからフォーカス(キーボード操作の対象)を外す
+      // (本物だけに枠線が出たり、Enter キーで必ず本物が押せたりしないようにするため)
+      pushButton.blur();
       const fakes = [];
       for (let i = 0; i < 6; i++) {
         const fake = document.createElement("button");
@@ -461,6 +477,9 @@ const events = [
       }
       // 本物と偽物をまとめて、重ならないようにマス目に並べる
       placeOnGrid([pushButton, ...fakes]);
+      // Tab キーで移動する順番もシャッフルする(本物がいつも最初に選ばれて、正解がばれないようにするため)
+      const order = shuffle([pushButton, ...fakes]);
+      order.forEach((button, i) => button.setAttribute("tabindex", i + 1));
     },
   },
   {

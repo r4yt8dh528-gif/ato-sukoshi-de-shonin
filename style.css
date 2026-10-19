@@ -16,6 +16,10 @@ body {
   font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
   /* 横スクロールだけ防ぐ。縦は画面が低いとき(スマホ横向きなど)にスクロールできるようにする */
   overflow-x: hidden;
+  /* 画面全体の文字を選択できなくする
+     (ボタンが消えたり逃げたりした直後の連打が、下にある文字に当たって選択状態になるのを防ぐ) */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* 稟議書っぽい白い紙 */
@@ -135,6 +139,10 @@ h1 {
   transition: transform 0.1s;
   touch-action: manipulation; /* スマホで連打してもズームしないようにする */
   white-space: nowrap; /* 画面の端でも文字が折り返さないようにする(ボタンの大きさを正しく測るため) */
+  user-select: none; /* 連打しても文字が選択状態(青い背景)にならないようにする */
+  -webkit-user-select: none; /* 同上(Safari 用) */
+  -webkit-tap-highlight-color: transparent; /* スマホでタップしたときに光らないようにする */
+  -webkit-touch-callout: none; /* スマホの長押しメニューを出さないようにする */
 }
 
 .push-button:active {
@@ -142,14 +150,11 @@ h1 {
 }
 
 /* ボタンが逃げ回るモード */
+/* 本物も偽物も同じ重なり順にして、見た目の違いをなくす */
 .push-button.escaping {
   position: fixed;
-  transition: left 0.2s, top 0.2s;
-}
-
-/* 偽物のボタンは本物の上に重なるようにする */
-.push-button.fake {
   z-index: 2;
+  transition: left 0.2s, top 0.2s;
 }
 
 /* ボタンが透明になるモード */
@@ -221,6 +226,11 @@ h1 {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  touch-action: manipulation; /* スマホで連打してもズームしないようにする */
+  user-select: none; /* 連打しても文字が選択状態(青い背景)にならないようにする */
+  -webkit-user-select: none; /* 同上(Safari 用) */
+  -webkit-tap-highlight-color: transparent; /* スマホでタップしたときに光らないようにする */
+  -webkit-touch-callout: none; /* スマホの長押しメニューを出さないようにする */
 }
 
 /* ===== エンディング ===== */
