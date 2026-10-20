@@ -78,7 +78,26 @@ const GAME_URL = "https://r4yt8dh528-gif.github.io/ato-sukoshi-de-shonin/";
 // 罫線の「─」は文字数を2倍使うので使わない
 const SHARE_DIVIDER = "――――――――――";
 
-// 定型文のパターン。シェアするたびに、この中からランダムに1つ選ぶ
+// 途中でシェアするときの定型文のパターン(承認される前用)。シェアするたびに、この中からランダムに1つ選ぶ
+// 文中の {進捗} はそのときの進捗率(例: 99.9998%)、{承認者} は現在の承認者(例: 専務(確認中))に置き換わる
+const SHARE_PATTERNS_IN_PROGRESS = [
+  `【進捗報告】
+件名:ボールペン1本の購入について
+ステータス:承認待ち({進捗})
+#あと少しで承認`,
+
+  `件名:ボールペン1本の購入について
+現在の承認者:{承認者}
+まだ承認されていません。
+#あと少しで承認`,
+
+  `【催促中】
+ボールペン1本の稟議、あと少しで承認されそうです。
+進捗:{進捗}
+#あと少しで承認`,
+];
+
+// 承認されたあと(エンディング)でシェアするときの定型文のパターン。シェアするたびに、この中からランダムに1つ選ぶ
 // 1つのパターンは「` `」(バッククォート)で囲み、改行はそのまま書けば反映される
 const SHARE_PATTERNS = [
   `【承認通知】
@@ -741,6 +760,7 @@ const ending = document.getElementById("ending");
 const punchline = document.getElementById("punchline");
 const retryButton = document.getElementById("retryButton");
 const shareButton = document.getElementById("shareButton");
+const shareNowButton = document.getElementById("shareNowButton");
 const skipHint = document.getElementById("skipHint");
 
 // ボタンが画面にちゃんと出ているか(出てくる前の透明なボタンを、うっかり押さないようにするため)
@@ -760,13 +780,21 @@ retryButton.addEventListener("click", (e) => {
 shareButton.addEventListener("click", (e) => {
   if (!isShown(shareButton)) return;
   e.stopPropagation();
-  window.open(buildShareUrl(), "_blank", "noopener");
+  window.open(buildShareUrl(SHARE_PATTERNS), "_blank", "noopener");
+});
+
+// 途中経過を X でシェアする(承認される前でも押せる)
+shareNowButton.addEventListener("click", () => {
+  window.open(buildShareUrl(SHARE_PATTERNS_IN_PROGRESS), "_blank", "noopener");
 });
 
 // ポスト文を組み立てて、X の投稿画面のURLにする
+// patterns の中からランダムに1つ選び、{進捗} と {承認者} をそのときの状態に置き換える
 // 形式: 空行2つ(本人が一言書くスペース) → 区切り線 → 定型文 → 区切り線 → ゲームのURL
-function buildShareUrl() {
-  const pattern = pick(SHARE_PATTERNS);
+function buildShareUrl(patterns) {
+  const pattern = pick(patterns)
+    .replaceAll("{進捗}", displayInfo().text + "%")
+    .replaceAll("{承認者}", currentApprover());
   const lines = ["", "", SHARE_DIVIDER, pattern, SHARE_DIVIDER, GAME_URL];
   const text = lines.join("\n");
   return "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);

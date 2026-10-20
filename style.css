@@ -168,6 +168,20 @@ h1 {
   transition: transform 0.6s;
 }
 
+/* 途中経過をシェアするボタン。「催促する」ボタンや偽ボタンと見間違えないよう、白地に枠線だけの控えめな見た目にする */
+.share-now-button {
+  margin-top: 12px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #4b5563;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .counter {
   margin: 20px 0 0;
   color: #6b7280;
