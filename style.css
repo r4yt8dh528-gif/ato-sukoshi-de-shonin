@@ -170,7 +170,9 @@ h1 {
 
 /* 途中経過をシェアするボタン。「催促する」ボタンや偽ボタンと見間違えないよう、白地に枠線だけの控えめな見た目にする */
 .share-now-button {
+  display: inline-block;
   margin-top: 12px;
+  text-decoration: none;
   padding: 6px 14px;
   font-size: 12px;
   color: #4b5563;
@@ -406,7 +408,9 @@ h1 {
 /* 結果をシェアするボタン(X の色に合わせて黒) */
 .share-button {
   display: block;
+  width: fit-content;
   margin: 32px auto 0;
+  text-decoration: none;
   padding: 14px 28px;
   font-size: 16px;
   font-weight: bold;
@@ -415,6 +419,8 @@ h1 {
   border: none;
   border-radius: 999px;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent; /* タップしたときに四角く光らないようにする */
 }
 
 .retry-button {

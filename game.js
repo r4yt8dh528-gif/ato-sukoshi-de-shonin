@@ -48,6 +48,11 @@ const SETBACK = {
 // ここからクリアに近づくほど差し戻しの影響が小さくなり、最後はゼロになる
 const SETBACK_FADE_FROM = 70;
 
+// 差し戻しの「遅れ」が1回押すごとに回復する割合(%)
+// 3 なら、1回押すたびに遅れが3%ずつ減る(だいたい20回ほど押すと半分に戻る)
+// これがないと、回数が多いプレイでは遅れがたまり続けて、進捗が0%のまま動かなくなる
+const SETBACK_RECOVERY = 3;
+
 // 「偽の承認」が出始める進捗(画面に表示される%)
 // 序盤で出ても驚きがないので、ある程度進んでから出す
 const FAKE_APPROVAL_FROM = 70;
@@ -181,7 +186,10 @@ function progressRatio() {
   }
 
   const progress = ratio - setbackDebt * effect;
-  return Math.max(0, progress);
+
+  // どれだけ差し戻されても、押した分の半分は残す(0%に戻って固まったように見えないようにする)
+  const minimum = ratio * 0.5;
+  return Math.max(minimum, progress);
 }
 
 // ---------------------------------------------
@@ -265,6 +273,8 @@ function setback(range, text) {
 function countClick() {
   if (startTime === null) startTime = Date.now();
   clickCount++;
+  // 押し続けると、差し戻しの遅れが少しずつ回復する
+  setbackDebt = setbackDebt * (1 - SETBACK_RECOVERY / 100);
   if (clickCount >= clearClicks) {
     cleared = true;
     busy = true;
@@ -776,16 +786,24 @@ retryButton.addEventListener("click", (e) => {
   location.reload();
 });
 
+// シェアボタンは普通のリンク(<a>)にしてある
+// 押された瞬間にリンク先をポスト文入りのURLに書き換えて、そのまま新しいタブで開かせる
+// (プログラムから新しいページを開く window.open は、iPhone やアプリ内ブラウザでブロックされることがあるため)
+
 // 結果を X(旧Twitter)でシェアする
 shareButton.addEventListener("click", (e) => {
-  if (!isShown(shareButton)) return;
+  // まだ透明なら開かない。タップは「全文表示」として扱う
+  if (!isShown(shareButton)) {
+    e.preventDefault();
+    return;
+  }
   e.stopPropagation();
-  window.open(buildShareUrl(SHARE_PATTERNS), "_blank", "noopener");
+  shareButton.href = buildShareUrl(SHARE_PATTERNS);
 });
 
 // 途中経過を X でシェアする(承認される前でも押せる)
 shareNowButton.addEventListener("click", () => {
-  window.open(buildShareUrl(SHARE_PATTERNS_IN_PROGRESS), "_blank", "noopener");
+  shareNowButton.href = buildShareUrl(SHARE_PATTERNS_IN_PROGRESS);
 });
 
 // ポスト文を組み立てて、X の投稿画面のURLにする
